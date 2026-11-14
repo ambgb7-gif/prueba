@@ -1,0 +1,718 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cuaderno de Dibujo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat+Brush&family=Courier+Prime:wght@400;700&family=Kalam:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap">
+<style>
+/* Concepto: un cuaderno de bocetos abierto. Cada técnica es una página con espiral, cinta adhesiva y notas a lápiz. Una sola gama: grafito azulado. */
+:root{
+  --paper:#e2e6ea; --sheet:#f1f3f5; --sheet-2:#e6e9ec; --ink:#1d2227; --graphite:#444c55; --pencil:#5b646d;
+  --line:#b4bbc3; --dot:#c4cad0; --hole:#c3c9cf; --shadow:rgba(29,34,39,.2); --tape:rgba(120,130,140,.32);
+  --v1:#fafbfc; --v2:#d5dade; --v3:#aab2ba; --v4:#7b848d; --v5:#4a525a;
+  --f-display:'Caveat Brush','Segoe Print',cursive;
+  --f-note:'Kalam','Segoe Print',cursive;
+  --f-label:'Courier Prime','Courier New',monospace;
+  --f-body:'Work Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#111316; --sheet:#1b1f23; --sheet-2:#242a2f; --ink:#e7eaed; --graphite:#b9c0c7; --pencil:#8b949d;
+    --line:#3a4148; --dot:#2a3036; --hole:#0d0f11; --shadow:rgba(0,0,0,.55); --tape:rgba(160,170,180,.22);
+    --v1:#d3d9df; --v2:#a6aeb6; --v3:#7b848d; --v4:#4f565d; --v5:#2b3035;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#111316; --sheet:#1b1f23; --sheet-2:#242a2f; --ink:#e7eaed; --graphite:#b9c0c7; --pencil:#8b949d;
+  --line:#3a4148; --dot:#2a3036; --hole:#0d0f11; --shadow:rgba(0,0,0,.55); --tape:rgba(160,170,180,.22);
+  --v1:#d3d9df; --v2:#a6aeb6; --v3:#7b848d; --v4:#4f565d; --v5:#2b3035;
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--paper); color:var(--ink); font-family:var(--f-body); font-size:16px; line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:0 56px;
+}
+body::before{content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top, 0px); background:var(--paper); z-index:30}
+.book{max-width:980px; margin:0 auto}
+h1,h2,h3{margin:0; font-weight:400; text-wrap:balance}
+p{margin:0 0 1em; max-width:64ch}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:3px}
+
+/* Pestañas de índice */
+.tabs{
+  position:sticky; top:env(safe-area-inset-top, 0px); z-index:20; background:var(--paper);
+  display:flex; align-items:flex-end; gap:6px; padding-top:10px; border-bottom:1px solid var(--line);
+  overflow-x:auto; scrollbar-width:thin;
+}
+.tabs a{
+  flex:0 0 auto; font-family:var(--f-label); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; text-decoration:none;
+  padding:8px 12px 7px; border:1px solid var(--line); border-bottom:0; border-radius:7px 7px 0 0; background:var(--sheet-2); color:var(--pencil);
+}
+.tabs a:hover{color:var(--ink)}
+.tabs a[aria-current="true"]{background:var(--sheet); color:var(--ink); font-weight:700; transform:translateY(1px)}
+.theme-btn{
+  margin-left:auto; flex:0 0 auto; font-family:var(--f-label); font-size:.78rem; text-transform:uppercase; letter-spacing:.06em;
+  padding:7px 12px; margin-bottom:6px; background:transparent; color:var(--graphite); border:1px solid var(--line); border-radius:4px; cursor:pointer;
+}
+.theme-btn:hover{border-color:var(--graphite)}
+
+/* Hojas */
+.page,.cover{
+  position:relative; margin-block:34px; border:1px solid var(--line); border-radius:4px 12px 12px 4px; background-color:var(--sheet);
+  background-image:radial-gradient(var(--dot) 1px, transparent 1.2px); background-size:24px 24px; background-position:12px 12px;
+  padding:clamp(22px,4.5vw,48px) clamp(18px,4.5vw,48px) clamp(22px,4.5vw,48px) clamp(46px,7.5vw,84px);
+  box-shadow:5px 7px 0 -2px var(--sheet-2), 5px 7px 0 -1px var(--line), 0 18px 30px -20px var(--shadow);
+  scroll-margin-top:64px;
+}
+.page::before,.cover::before{
+  content:""; position:absolute; left:10px; top:14px; bottom:14px; width:26px;
+  background:radial-gradient(circle at 13px 50%, var(--hole) 0 5.5px, transparent 6.5px) 0 0/26px 42px repeat-y;
+}
+.page::after,.cover::after{content:""; position:absolute; left:42px; top:0; bottom:0; width:0; border-left:1px solid var(--line); opacity:.6}
+@media (max-width:560px){
+  .page::before,.cover::before{left:6px; width:20px; background-size:20px 38px; background-image:radial-gradient(circle at 10px 50%, var(--hole) 0 4.5px, transparent 5.5px)}
+  .page::after,.cover::after{left:30px}
+}
+
+.folio{font-family:var(--f-label); font-size:.78rem; letter-spacing:.12em; text-transform:uppercase; color:var(--pencil); margin-bottom:6px}
+.page h2{font-family:var(--f-display); font-size:clamp(2.2rem,6vw,3.6rem); line-height:1; margin-bottom:18px;
+  text-decoration:underline wavy var(--pencil) 1.5px; text-underline-offset:9px; text-decoration-skip-ink:none}
+.page h3{font-family:var(--f-display); font-size:1.55rem; line-height:1.1; margin:26px 0 8px; color:var(--graphite)}
+.lede{font-size:1.1rem; color:var(--graphite); margin-top:22px}
+
+/* Portada */
+.cover{margin-top:26px}
+.cover-grid{display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:28px; align-items:center}
+.cover h1{font-family:var(--f-display); font-size:clamp(3rem,10vw,6.4rem); line-height:.9; transform:rotate(-1.5deg); margin-bottom:16px}
+.cover .tag{display:inline-block; font-family:var(--f-label); font-size:.8rem; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--graphite); padding:4px 10px; margin-bottom:18px; color:var(--graphite)}
+.owner{font-family:var(--f-note); color:var(--graphite); margin-top:20px; max-width:34ch; border-bottom:1.5px solid var(--pencil); padding-bottom:4px}
+.cover-art{min-width:0}
+@media (max-width:700px){.cover-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Figuras y notas */
+.fig{position:relative; margin:22px 0 10px; padding:16px 14px 10px; background:var(--sheet-2); border:1px dashed var(--line); min-width:0}
+.fig::before{content:""; position:absolute; top:-11px; left:50%; width:78px; height:22px; background:var(--tape); transform:translateX(-50%) rotate(-2.5deg)}
+.fig svg{display:block; width:100%; height:auto; color:var(--ink)}
+.fig figcaption{font-family:var(--f-label); font-size:.78rem; color:var(--pencil); margin-top:8px; letter-spacing:.02em}
+.note{
+  position:relative; font-family:var(--f-note); font-size:1.02rem; line-height:1.45; color:var(--graphite);
+  border:1.5px dashed var(--pencil); border-radius:6px; padding:12px 16px; margin:22px 0; max-width:52ch; transform:rotate(-.7deg);
+}
+.note b{font-weight:700; color:var(--ink)}
+.cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:20px; align-items:start}
+.cols>*{min-width:0}
+.card{border:1px solid var(--line); background:var(--sheet-2); padding:14px 16px; border-radius:3px}
+.card h4{margin:0 0 4px; font-family:var(--f-label); font-size:.82rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink)}
+.card p{margin:0; font-size:.95rem; color:var(--graphite)}
+
+/* Pasos con numeración real */
+.steps{counter-reset:paso; list-style:none; margin:14px 0; padding:0; display:grid; gap:12px; max-width:64ch}
+.steps li{counter-increment:paso; position:relative; padding-left:46px}
+.steps li::before{content:counter(paso); position:absolute; left:0; top:-2px; width:34px; height:34px; display:grid; place-items:center;
+  font-family:var(--f-display); font-size:1.35rem; border:1.5px solid var(--graphite); border-radius:50% 46% 52% 48%; color:var(--ink)}
+.steps b{color:var(--ink)}
+
+/* Controles */
+.controls{display:grid; gap:12px; margin-top:14px; max-width:520px}
+.row{display:grid; grid-template-columns:minmax(0,150px) minmax(0,1fr) 3.2ch; gap:12px; align-items:center; font-family:var(--f-label); font-size:.82rem; color:var(--graphite)}
+.row output{text-align:right}
+input[type=range]{width:100%; accent-color:var(--graphite)}
+.btn{font-family:var(--f-label); font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; padding:8px 14px; background:transparent; color:var(--ink); border:1.5px solid var(--graphite); border-radius:4px; cursor:pointer}
+.btn[aria-pressed="true"]{background:var(--ink); color:var(--sheet)}
+.btn:hover{border-color:var(--ink)}
+.switch{display:inline-flex; align-items:center; gap:8px; font-family:var(--f-label); font-size:.82rem; color:var(--graphite); cursor:pointer}
+.switch input{accent-color:var(--graphite); width:18px; height:18px}
+
+/* Dibujo en SVG */
+.s{fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round}
+.s-thin{fill:none; stroke:currentColor; stroke-width:1.2; stroke-linecap:round}
+.guide{fill:none; stroke:var(--pencil); stroke-width:1.2; stroke-dasharray:5 5; stroke-linecap:round}
+.lbl{font-family:var(--f-note); font-size:15px; fill:var(--graphite)}
+.lbl-m{font-family:var(--f-label); font-size:12px; fill:var(--pencil)}
+.rough{filter:url(#rough)}
+.f1{fill:var(--v1)} .f2{fill:var(--v2)} .f3{fill:var(--v3)} .f4{fill:var(--v4)} .f5{fill:var(--v5)}
+
+/* Técnicas de sombreado */
+.tech-tabs{display:flex; flex-wrap:wrap; gap:8px; margin:12px 0}
+.tech-out{min-height:3.2em; max-width:64ch; color:var(--graphite)}
+
+/* Perspectiva interactiva */
+#vp-svg{touch-action:none; cursor:grab}
+#vp-svg.drag{cursor:grabbing}
+.vp-handle{fill:var(--ink); stroke:var(--sheet); stroke-width:3}
+
+/* Práctica */
+.progress{height:10px; border:1.5px solid var(--graphite); border-radius:6px; overflow:hidden; max-width:420px; background:var(--sheet-2)}
+.progress i{display:block; height:100%; width:0; background:var(--graphite); transition:width .3s}
+.week{display:grid; gap:8px; margin:10px 0 18px; padding:0; list-style:none}
+.week label{display:flex; gap:12px; align-items:flex-start; cursor:pointer; padding:10px 12px; border:1px solid var(--line); background:var(--sheet-2); border-radius:3px}
+.week input{margin-top:5px; width:18px; height:18px; accent-color:var(--graphite); flex:0 0 auto}
+.week span{min-width:0}
+.week input:checked + span{color:var(--pencil); text-decoration:line-through; text-decoration-color:var(--pencil)}
+.min{font-family:var(--f-label); font-size:.78rem; color:var(--pencil); white-space:nowrap}
+
+footer{max-width:980px; margin:30px auto 0; text-align:center; font-family:var(--f-note); color:var(--pencil)}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{transition:none !important; animation:none !important}
+}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="4" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+  </filter>
+</svg>
+
+<div class="book">
+
+<nav class="tabs" aria-label="Índice del cuaderno">
+  <a href="#materiales">Materiales</a>
+  <a href="#formas">Formas</a>
+  <a href="#proporciones">Proporciones</a>
+  <a href="#sombreado">Sombreado</a>
+  <a href="#fuga">Punto de fuga</a>
+  <a href="#composicion">Composición</a>
+  <a href="#practica">Práctica</a>
+  <button class="theme-btn" id="theme-btn" type="button" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
+</nav>
+
+<header class="cover" id="inicio">
+  <div class="cover-grid">
+    <div>
+      <span class="tag">Cuaderno de bocetos · nivel principiante</span>
+      <h1>Aprende a dibujar</h1>
+      <p class="lede">Siete páginas, siete técnicas. Cada una explica una idea, te deja practicarla en la propia hoja y termina con un ejercicio corto. Sólo necesitas un lápiz y papel.</p>
+      <p class="owner">Este cuaderno es de: ______________</p>
+    </div>
+    <div class="cover-art">
+      <svg viewBox="0 0 360 300" role="img" aria-label="Un lápiz apoyado en diagonal junto a una esfera sombreada" class="rough" style="color:var(--ink);width:100%;height:auto;display:block">
+        <circle cx="270" cy="82" r="46" class="s f2"/>
+        <path d="M270 128 A46 46 0 0 0 316 82 Q296 116 270 128Z" class="f4"/>
+        <path d="M244 60 Q256 46 272 44" class="s-thin"/>
+        <path d="M250 112 Q276 122 300 104 M258 120 Q280 126 304 110" class="s-thin"/>
+        <ellipse cx="282" cy="132" rx="52" ry="8" class="f3" opacity=".55"/>
+        <g transform="translate(70 248) rotate(-24)">
+          <polygon points="0,-17 -54,0 0,17" class="s f1"/>
+          <polygon points="-54,0 -39,-5.5 -39,5.5" class="f5"/>
+          <rect x="0" y="-17" width="190" height="34" class="s f2"/>
+          <line x1="0" y1="-6" x2="190" y2="-6" class="s-thin"/>
+          <line x1="0" y1="6" x2="190" y2="6" class="s-thin"/>
+          <rect x="190" y="-17" width="24" height="34" class="s f3"/>
+          <line x1="198" y1="-17" x2="198" y2="17" class="s-thin"/>
+          <line x1="206" y1="-17" x2="206" y2="17" class="s-thin"/>
+          <rect x="214" y="-17" width="26" height="34" rx="8" class="s f4"/>
+        </g>
+        <path d="M24 258 q14 -22 26 -8 t26 -10 t24 6" class="s-thin" opacity=".8"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<!-- 1. MATERIALES -->
+<section class="page" id="materiales" aria-labelledby="h-mat">
+  <div class="folio">Página 1 de 7 · Antes de empezar</div>
+  <h2 id="h-mat">Materiales</h2>
+  <p class="lede">No hace falta comprar mucho. Con seis cosas puedes completar todo este cuaderno, y la más importante es el lápiz correcto para cada trabajo.</p>
+
+  <h3>La escala de grafito</h3>
+  <p>La letra <b>H</b> indica un grafito duro, que deja un trazo claro y fino. La letra <b>B</b> indica uno blando, que deja un trazo oscuro y graso. <b>HB</b> está en el medio.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 600 150" role="img" aria-label="Seis muestras de grafito de 4H a 6B, de más claro a más oscuro">
+      <g class="rough">
+        <rect x="14"  y="20" width="82" height="52" fill="currentColor" opacity=".14"/>
+        <rect x="112" y="20" width="82" height="52" fill="currentColor" opacity=".28"/>
+        <rect x="210" y="20" width="82" height="52" fill="currentColor" opacity=".45"/>
+        <rect x="308" y="20" width="82" height="52" fill="currentColor" opacity=".62"/>
+        <rect x="406" y="20" width="82" height="52" fill="currentColor" opacity=".82"/>
+        <rect x="504" y="20" width="82" height="52" fill="currentColor" opacity="1"/>
+      </g>
+      <g class="lbl-m" text-anchor="middle" style="font-size:14px">
+        <text x="55" y="94">4H</text><text x="153" y="94">2H</text><text x="251" y="94">HB</text>
+        <text x="349" y="94">2B</text><text x="447" y="94">4B</text><text x="545" y="94">6B</text>
+      </g>
+      <path d="M20 122 H570" class="s-thin"/><path d="M562 116 L572 122 L562 128" class="s-thin"/>
+      <text x="20" y="144" class="lbl">duro · claro · fino</text>
+      <text x="580" y="144" class="lbl" text-anchor="end">blando · oscuro · graso</text>
+    </svg>
+    <figcaption>Fig. 1 · Mismo papel, misma presión, distinto grafito.</figcaption>
+  </figure>
+
+  <h3>Tu kit mínimo</h3>
+  <div class="cols">
+    <div class="card"><h4>Tres lápices</h4><p>Un 2H para trazos de construcción, un HB para el dibujo general y un 4B o 6B para las sombras.</p></div>
+    <div class="card"><h4>Papel liso</h4><p>Un cuaderno de 90 a 120 g sin mucha textura. Si tiembla la línea, el papel es demasiado rugoso.</p></div>
+    <div class="card"><h4>Goma moldeable</h4><p>Se amasa y se presiona sobre el grafito para levantar luces sin ensuciar ni rasgar la hoja.</p></div>
+    <div class="card"><h4>Difumino</h4><p>Un rollito de papel prensado para mezclar el grafito. Un trozo de papel higiénico enrollado sirve igual.</p></div>
+    <div class="card"><h4>Sacapuntas o cúter</h4><p>Una punta larga permite sombrear de lado. Afílala cada vez que el trazo engorde.</p></div>
+    <div class="card"><h4>Regla pequeña</h4><p>Sólo para la página de perspectiva, y sólo cuando quieras comprobar tus líneas a mano.</p></div>
+  </div>
+
+  <p class="note"><b>Nota al margen:</b> para sombrear, sujeta el lápiz más atrás y deja que trabaje el brazo. Para detalles, acércate a la punta y usa los dedos.</p>
+</section>
+
+<!-- 2. FORMAS -->
+<section class="page" id="formas" aria-labelledby="h-for">
+  <div class="folio">Página 2 de 7 · La base de todo</div>
+  <h2 id="h-for">Líneas y formas</h2>
+  <p class="lede">Una taza, un árbol y una cara se construyen con cuatro volúmenes. Si aprendes a dibujarlos en tres dimensiones, puedes dibujar casi cualquier objeto.</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 640 215" role="img" aria-label="Esfera, cubo, cono y cilindro con sombreado simple">
+      <g class="rough" style="color:var(--ink)">
+        <g>
+          <circle cx="80" cy="90" r="50" class="s f2"/>
+          <path d="M80 140 A50 50 0 0 0 130 90 Q112 128 80 140Z" class="f4"/>
+          <circle cx="80" cy="90" r="50" class="s"/>
+          <ellipse cx="80" cy="90" rx="50" ry="14" class="guide"/>
+          <ellipse cx="80" cy="90" rx="14" ry="50" class="guide"/>
+        </g>
+        <g transform="translate(160 0)">
+          <polygon points="30,70 55,48 125,48 100,70" class="s f1"/>
+          <rect x="30" y="70" width="70" height="70" class="s f2"/>
+          <polygon points="100,70 125,48 125,118 100,140" class="s f4"/>
+          <line x1="30" y1="140" x2="55" y2="118" class="guide"/>
+          <line x1="55" y1="118" x2="125" y2="118" class="guide"/>
+          <line x1="55" y1="48" x2="55" y2="118" class="guide"/>
+        </g>
+        <g transform="translate(320 0)">
+          <path d="M80 35 L40 135 A40 12 0 0 0 120 135 Z" class="s f2"/>
+          <path d="M80 35 L120 135 A40 12 0 0 1 80 147Z" class="f4"/>
+          <ellipse cx="80" cy="135" rx="40" ry="12" class="s"/>
+          <line x1="80" y1="35" x2="80" y2="135" class="guide"/>
+        </g>
+        <g transform="translate(480 0)">
+          <path d="M40 50 V130 A40 12 0 0 0 120 130 V50" class="s f2"/>
+          <path d="M101 60 V140 A40 12 0 0 0 120 130 V50 A40 12 0 0 1 101 60Z" class="f4"/>
+          <ellipse cx="80" cy="50" rx="40" ry="12" class="s f1"/>
+          <line x1="80" y1="50" x2="80" y2="130" class="guide"/>
+        </g>
+      </g>
+      <g class="lbl" text-anchor="middle">
+        <text x="80" y="192">Esfera</text><text x="240" y="192">Cubo</text><text x="400" y="192">Cono</text><text x="560" y="192">Cilindro</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 2 · Las líneas de puntos son líneas de construcción: se dibujan suaves y se dejan a la vista.</figcaption>
+  </figure>
+
+  <h3>Cómo practicarlas</h3>
+  <ol class="steps">
+    <li><b>Líneas rectas desde el hombro.</b> Marca dos puntos, mira el segundo y traza de un solo movimiento. Llena media hoja. Las primeras salen curvas y es normal.</li>
+    <li><b>Elipses encadenadas.</b> Dibuja círculos aplastados uno dentro de otro, girando el brazo. Una elipse es un círculo visto en perspectiva, y la usarás en cada cilindro.</li>
+    <li><b>Transparencia.</b> Dibuja cada forma como si fuera de vidrio, con las aristas de atrás incluidas. Eso te obliga a entender el volumen antes de sombrearlo.</li>
+    <li><b>Combina.</b> Une un cilindro y una esfera para hacer una taza, una lámpara o un muñeco. Cada objeto cotidiano es una suma de estas formas.</li>
+  </ol>
+  <p class="note"><b>Regla de oro:</b> traza claro primero y oscuro después. Una línea fuerte no se puede deshacer, una suave sí.</p>
+</section>
+
+<!-- 3. PROPORCIONES -->
+<section class="page" id="proporciones" aria-labelledby="h-pro">
+  <div class="folio">Página 3 de 7 · Que se parezca</div>
+  <h2 id="h-pro">Proporciones</h2>
+  <p class="lede">Cuando un dibujo "no se parece" casi nunca es por falta de detalle. Es porque las distancias entre las partes no coinciden con las reales. Medir antes de dibujar lo arregla.</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 540 290" role="img" aria-label="Cabeza de frente con líneas guía: los ojos están a la mitad de la cabeza">
+      <g class="rough" style="color:var(--ink)">
+        <ellipse cx="150" cy="150" rx="70" ry="95" class="s f1"/>
+        <path d="M80 150 Q64 172 82 198 M220 150 Q236 172 218 198" class="s"/>
+        <path d="M108 150 Q122 140 136 150 Q122 158 108 150Z M164 150 Q178 140 192 150 Q178 158 164 150Z" class="s f2"/>
+        <circle cx="122" cy="150" r="3.4" class="f5"/><circle cx="178" cy="150" r="3.4" class="f5"/>
+        <path d="M150 156 V190 M138 197 Q150 206 162 197" class="s"/>
+        <path d="M132 214 Q150 222 168 214" class="s"/>
+      </g>
+      <g class="guide">
+        <line x1="40" y1="55" x2="260" y2="55"/><line x1="40" y1="150" x2="260" y2="150"/>
+        <line x1="40" y1="198" x2="260" y2="198"/><line x1="40" y1="214" x2="260" y2="214"/>
+        <line x1="40" y1="245" x2="260" y2="245"/><line x1="150" y1="40" x2="150" y2="258"/>
+        <line x1="80" y1="130" x2="80" y2="170"/><line x1="108" y1="130" x2="108" y2="170"/>
+        <line x1="136" y1="130" x2="136" y2="170"/><line x1="164" y1="130" x2="164" y2="170"/>
+        <line x1="192" y1="130" x2="192" y2="170"/><line x1="220" y1="130" x2="220" y2="170"/>
+      </g>
+      <g class="lbl">
+        <text x="272" y="60">tope de la cabeza</text>
+        <text x="272" y="155">ojos: justo a la mitad</text>
+        <text x="272" y="196">nariz: a medio camino de los ojos al mentón</text>
+        <text x="272" y="226">boca: un tercio bajo la nariz</text>
+        <text x="272" y="250">mentón</text>
+      </g>
+      <text x="150" y="278" class="lbl-m" text-anchor="middle">el ancho = cinco ojos</text>
+    </svg>
+    <figcaption>Fig. 3 · Proporciones clásicas de una cabeza adulta vista de frente. Cada rostro varía, el esquema es el punto de partida.</figcaption>
+  </figure>
+
+  <h3>Medir con el lápiz</h3>
+  <ol class="steps">
+    <li><b>Estira el brazo</b> con el lápiz en vertical y cierra un ojo. Siempre a la misma distancia, o las medidas no se comparan.</li>
+    <li><b>Toma una unidad:</b> la altura de la cabeza, del jarrón o de la ventana. Marca esa altura con el pulgar sobre el lápiz.</li>
+    <li><b>Compara.</b> ¿Cuántas veces cabe esa unidad en el ancho? ¿Y en el resto del objeto? Anota la relación, por ejemplo "el ancho es una vez y media la altura".</li>
+    <li><b>Traspasa la relación al papel</b> con trazos suaves y revisa antes de seguir.</li>
+  </ol>
+
+  <div class="cols">
+    <div class="card"><h4>Método de cuadrícula</h4><p>Traza una rejilla sobre la foto de referencia y otra igual sobre tu hoja. Copias el contenido de cada cuadro uno por uno, sin pensar en el objeto entero.</p></div>
+    <div class="card"><h4>Espacio negativo</h4><p>Dibuja el hueco entre el asa y la taza, no la asa. Los huecos no tienen significado para el cerebro y por eso se dibujan con más exactitud.</p></div>
+  </div>
+</section>
+<!-- 4. SOMBREADO -->
+<section class="page" id="sombreado" aria-labelledby="h-som">
+  <div class="folio">Página 4 de 7 · Dar volumen</div>
+  <h2 id="h-som">Sombreado</h2>
+  <p class="lede">Un contorno dibuja la silueta. El sombreado hace que parezca sólido. Todo depende de una decisión previa: de dónde viene la luz.</p>
+
+  <h3>Las zonas de una forma iluminada</h3>
+  <p>Mueve la luz y observa cómo se desplazan las zonas. La forma no cambia, sólo cambia dónde cae cada valor.</p>
+  <figure class="fig">
+    <svg id="sph-svg" viewBox="0 0 520 250" role="img" aria-label="Esfera iluminada con luz ajustable y su sombra sobre el suelo">
+      <defs>
+        <radialGradient id="sph-g" cx="0.5" cy="0.5" r="0.78" fx="0.3" fy="0.3">
+          <stop offset="0" style="stop-color:var(--v1)"/>
+          <stop offset="0.35" style="stop-color:var(--v2)"/>
+          <stop offset="0.7" style="stop-color:var(--v4)"/>
+          <stop offset="1" style="stop-color:var(--v5)"/>
+        </radialGradient>
+        <radialGradient id="sph-r" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0.7" style="stop-color:var(--v3);stop-opacity:0"/>
+          <stop offset="1" style="stop-color:var(--v3);stop-opacity:.55"/>
+        </radialGradient>
+        <filter id="soft" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>
+      </defs>
+      <line x1="20" y1="198" x2="500" y2="198" class="s-thin"/>
+      <ellipse id="sph-sh" cx="260" cy="200" rx="90" ry="12" fill="currentColor" opacity=".5" filter="url(#soft)"/>
+      <circle id="sph-c" cx="260" cy="128" r="70" fill="url(#sph-g)"/>
+      <circle cx="260" cy="128" r="70" fill="url(#sph-r)"/>
+      <circle cx="260" cy="128" r="70" class="s rough"/>
+      <g id="sph-lbls" class="lbl">
+        <text x="30" y="40">luz</text>
+        <text x="410" y="120">sombra propia</text>
+        <text x="30" y="234">sombra proyectada</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 4 · Luz, tono medio, sombra propia, luz reflejada del suelo y sombra proyectada.</figcaption>
+  </figure>
+  <div class="controls">
+    <div class="row"><label for="az">Luz: izq. a der.</label><input id="az" type="range" min="-80" max="80" value="-40"><output id="az-o">-40</output></div>
+    <div class="row"><label for="el">Luz: altura</label><input id="el" type="range" min="15" max="85" value="50"><output id="el-o">50</output></div>
+  </div>
+
+  <h3>Cuatro maneras de oscurecer</h3>
+  <p>Cada técnica produce una textura distinta. Elige un valor del 1 al 5 y mira cómo llega a él cada una.</p>
+  <div class="tech-tabs" role="group" aria-label="Técnica de sombreado">
+    <button class="btn" type="button" data-tech="hatch" aria-pressed="true">Rayado</button>
+    <button class="btn" type="button" data-tech="cross" aria-pressed="false">Rayado cruzado</button>
+    <button class="btn" type="button" data-tech="stipple" aria-pressed="false">Punteado</button>
+    <button class="btn" type="button" data-tech="blend" aria-pressed="false">Difuminado</button>
+  </div>
+  <figure class="fig">
+    <svg id="ramp" viewBox="0 0 600 150" role="img" aria-label="Escala de cinco valores del claro al oscuro con la técnica elegida" style="color:var(--ink)"></svg>
+    <figcaption id="tech-name">Rayado · valores 1 (luz) a 5 (sombra)</figcaption>
+  </figure>
+  <p class="tech-out" id="tech-out" aria-live="polite"></p>
+
+  <h3>Sombrear una esfera, paso a paso</h3>
+  <ol class="steps">
+    <li><b>Decide la luz</b> y dibuja una flecha pequeña fuera del dibujo para no olvidarla.</li>
+    <li><b>Marca las zonas</b> con líneas suaves: dónde termina la luz y dónde empieza la sombra propia.</li>
+    <li><b>Cubre todo el lado oscuro</b> con una capa uniforme de tono medio, de lado con la punta.</li>
+    <li><b>Oscurece la sombra propia</b> con otra capa, pero deja una franja clara junto al borde: es la luz reflejada, y vuelve redondo el volumen.</li>
+    <li><b>Añade la sombra proyectada</b> en el suelo, más oscura pegada al objeto y más suave al alejarse.</li>
+    <li><b>Levanta las luces</b> con la goma moldeable y suaviza las transiciones con el difumino.</li>
+  </ol>
+  <p class="note"><b>Truco:</b> entrecierra los ojos. Si tu dibujo se ve como tres o cuatro manchas claras y oscuras bien separadas, los valores están bien.</p>
+</section>
+
+<!-- 5. PUNTO DE FUGA -->
+<section class="page" id="fuga" aria-labelledby="h-fug">
+  <div class="folio">Página 5 de 7 · Profundidad</div>
+  <h2 id="h-fug">Punto de fuga</h2>
+  <p class="lede">Las líneas paralelas que se alejan de ti parecen juntarse en el horizonte, como las vías del tren. El punto donde se encuentran es el punto de fuga, y la línea que lo contiene es la altura de tus ojos.</p>
+
+  <h3>Un punto de fuga</h3>
+  <p>Sirve para pasillos, calles, vías y habitaciones vistas de frente. Arrastra el punto o usa los controles: todas las cajas obedecen al mismo punto.</p>
+  <figure class="fig">
+    <svg id="vp-svg" viewBox="0 0 600 340" role="img" aria-label="Tres cajas en perspectiva con un punto de fuga que se puede mover">
+      <g id="vp-scene"></g>
+    </svg>
+    <figcaption>Fig. 5 · Horizonte por encima de las cajas: ves sus tapas. Por debajo: ves sus bases.</figcaption>
+  </figure>
+  <div class="controls">
+    <div class="row"><label for="vp-h">Horizonte</label><input id="vp-h" type="range" min="50" max="300" value="120"><output id="vp-h-o">120</output></div>
+    <div class="row"><label for="vp-x">Punto de fuga</label><input id="vp-x" type="range" min="60" max="540" value="300"><output id="vp-x-o">300</output></div>
+    <label class="switch"><input id="vp-guides" type="checkbox" checked> Mostrar líneas de fuga</label>
+  </div>
+
+  <h3>Dos puntos de fuga</h3>
+  <p>Cuando ves un objeto por una esquina, cada cara se aleja hacia un punto distinto del horizonte. La arista vertical más cercana es la más larga y las demás se acortan hacia los lados.</p>
+  <figure class="fig">
+    <svg viewBox="0 0 600 270" role="img" aria-label="Cubo en perspectiva de dos puntos con sus líneas hacia los puntos de fuga">
+      <line x1="0" y1="120" x2="600" y2="120" class="s-thin"/>
+      <g class="guide">
+        <line x1="300" y1="170" x2="40" y2="120"/><line x1="300" y1="250" x2="40" y2="120"/>
+        <line x1="300" y1="170" x2="560" y2="120"/><line x1="300" y1="250" x2="560" y2="120"/>
+        <line x1="190" y1="148.8" x2="312.3" y2="139.3"/><line x1="420" y1="146.9" x2="312.3" y2="139.3"/>
+      </g>
+      <g class="rough" style="color:var(--ink)">
+        <polygon points="300,170 190,148.8 312.3,139.3 420,146.9" class="s f1"/>
+        <polygon points="300,170 190,148.8 190,195 300,250" class="s f2"/>
+        <polygon points="300,170 420,146.9 420,190 300,250" class="s f4"/>
+      </g>
+      <circle cx="40" cy="120" r="5" fill="currentColor"/><circle cx="560" cy="120" r="5" fill="currentColor"/>
+      <text x="40" y="106" class="lbl" text-anchor="middle">PF 1</text>
+      <text x="560" y="106" class="lbl" text-anchor="middle">PF 2</text>
+      <text x="300" y="108" class="lbl" text-anchor="middle">línea del horizonte</text>
+    </svg>
+    <figcaption>Fig. 6 · Las tres aristas horizontales de cada cara apuntan a su punto de fuga.</figcaption>
+  </figure>
+
+  <h3>Para dibujarlo</h3>
+  <ol class="steps">
+    <li><b>Traza el horizonte</b> con una línea ligera y marca los puntos de fuga, lo más separados que permita la hoja.</li>
+    <li><b>Dibuja la arista vertical más cercana</b> de tu objeto.</li>
+    <li><b>Desde sus extremos</b> lanza líneas hacia cada punto de fuga. Ahí quedan definidos los lados.</li>
+    <li><b>Cierra las caras</b> con verticales y vuelve a lanzar líneas a los puntos de fuga para completar la tapa.</li>
+    <li><b>Borra las guías</b> que sobren y refuerza los contornos.</li>
+  </ol>
+  <div class="cols">
+    <div class="card"><h4>Tres puntos de fuga</h4><p>Añade un tercer punto arriba o abajo para edificios altos vistos desde la calle o desde un balcón. Las verticales también convergen.</p></div>
+    <div class="card"><h4>Error frecuente</h4><p>Puntos de fuga demasiado cercanos entre sí deforman el objeto. Si se ve estirado, aleja los puntos.</p></div>
+  </div>
+</section>
+<!-- 6. COMPOSICIÓN -->
+<section class="page" id="composicion" aria-labelledby="h-com">
+  <div class="folio">Página 6 de 7 · Organizar la hoja</div>
+  <h2 id="h-com">Composición</h2>
+  <p class="lede">Dibujar bien un objeto no basta: también hay que decidir dónde va en la hoja. Una buena composición conduce la mirada hacia lo importante.</p>
+
+  <figure class="fig">
+    <svg viewBox="0 0 600 340" role="img" aria-label="Paisaje con un árbol y un sol colocados en los cruces de la regla de tercios">
+      <g class="rough" style="color:var(--ink)">
+        <rect x="20" y="20" width="560" height="200" class="f1"/>
+        <rect x="20" y="220" width="560" height="100" class="f3"/>
+        <path d="M20 220 Q120 168 220 205 T400 198 T580 186 V220 H20Z" class="s f2"/>
+        <circle cx="393" cy="120" r="24" class="s f1"/>
+        <path d="M207 222 V166" class="s"/>
+        <ellipse cx="207" cy="140" rx="32" ry="36" class="s f4"/>
+        <path d="M60 320 Q160 262 200 228 M150 320 Q200 276 214 230" class="s-thin"/>
+        <rect x="20" y="20" width="560" height="300" class="s"/>
+      </g>
+      <g id="thirds-grid" class="guide">
+        <line x1="206.7" y1="20" x2="206.7" y2="320"/><line x1="393.3" y1="20" x2="393.3" y2="320"/>
+        <line x1="20" y1="120" x2="580" y2="120"/><line x1="20" y1="220" x2="580" y2="220"/>
+      </g>
+      <text x="300" y="336" class="lbl-m" text-anchor="middle">árbol y sol en los cruces · horizonte en el tercio inferior · camino que lleva al árbol</text>
+    </svg>
+    <figcaption>Fig. 7 · Divide el rectángulo en tres partes iguales a lo ancho y a lo alto.</figcaption>
+  </figure>
+  <label class="switch"><input id="thirds" type="checkbox" checked> Mostrar la cuadrícula de tercios</label>
+
+  <h3>Cinco ideas para empezar</h3>
+  <div class="cols">
+    <div class="card"><h4>Regla de tercios</h4><p>Coloca lo importante sobre las líneas o en sus cruces, no en el centro exacto. El resultado se siente más natural.</p></div>
+    <div class="card"><h4>Líneas guía</h4><p>Caminos, ríos, vallas y bordes de mesa llevan la vista hacia el punto focal. Úsalos a propósito.</p></div>
+    <div class="card"><h4>Equilibrio</h4><p>Un objeto grande se compensa con uno pequeño más alejado del centro, como una balanza.</p></div>
+    <div class="card"><h4>Espacio negativo</h4><p>El vacío alrededor del tema le da aire. No rellenes toda la hoja.</p></div>
+    <div class="card"><h4>Punto focal</h4><p>Elige un sitio con el mayor contraste y el mayor detalle. El resto puede ir más suave.</p></div>
+  </div>
+  <p class="note"><b>Antes de dibujar en serio</b>, haz tres miniaturas del tamaño de una tarjeta, de unos dos minutos cada una. Escoge la mejor composición y entonces pasa a la hoja grande.</p>
+</section>
+
+<!-- 7. PRÁCTICA -->
+<section class="page" id="practica" aria-labelledby="h-pra">
+  <div class="folio">Página 7 de 7 · Constancia</div>
+  <h2 id="h-pra">Plan de práctica</h2>
+  <p class="lede">Diez a cuarenta minutos al día rinden más que una tarde larga cada mes. Marca cada ejercicio cuando lo termines, el avance se guarda en este navegador.</p>
+
+  <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="12" aria-valuenow="0" id="prog-bar"><i id="prog-fill"></i></div>
+  <p class="min" id="prog-txt" style="margin-top:8px">0 de 12 ejercicios</p>
+
+  <h3>Semana 1 · Mano suelta</h3>
+  <ul class="week">
+    <li><label><input type="checkbox" id="w1a"><span>Llenar una hoja de líneas rectas y otra de elipses. <span class="min">10 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w1b"><span>Dibujar esfera, cubo, cono y cilindro, uno por día. <span class="min">15 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w1c"><span>Hacer tu escala de cinco valores con un lápiz 2B. <span class="min">10 min</span></span></label></li>
+  </ul>
+  <h3>Semana 2 · Volumen</h3>
+  <ul class="week">
+    <li><label><input type="checkbox" id="w2a"><span>Sombrear una esfera con luz desde la izquierda y otra con luz desde arriba. <span class="min">20 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w2b"><span>Probar las cuatro técnicas sobre una pera o una manzana. <span class="min">25 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w2c"><span>Dibujar una taza midiendo con el lápiz. <span class="min">20 min</span></span></label></li>
+  </ul>
+  <h3>Semana 3 · Espacio</h3>
+  <ul class="week">
+    <li><label><input type="checkbox" id="w3a"><span>Una calle de un punto de fuga con cinco cajas. <span class="min">20 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w3b"><span>Un cubo en dos puntos de fuga, primero a mano y luego con regla. <span class="min">20 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w3c"><span>Tres miniaturas de composición de un mismo paisaje. <span class="min">15 min</span></span></label></li>
+  </ul>
+  <h3>Semana 4 · Todo junto</h3>
+  <ul class="week">
+    <li><label><input type="checkbox" id="w4a"><span>Autorretrato usando las proporciones de la cabeza. <span class="min">40 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w4b"><span>Bodegón de tres objetos con una sola fuente de luz. <span class="min">45 min</span></span></label></li>
+    <li><label><input type="checkbox" id="w4c"><span>Una habitación de tu casa en perspectiva. <span class="min">45 min</span></span></label></li>
+  </ul>
+  <button class="btn" type="button" id="prog-reset">Borrar avance</button>
+  <p class="note" style="margin-top:28px"><b>Última nota:</b> guarda todos tus dibujos con fecha, también los malos. En un mes vas a ver la diferencia sin esfuerzo.</p>
+</section>
+
+<footer>Fin del cuaderno. Sigue dibujando.</footer>
+</div>
+
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var NS='http://www.w3.org/2000/svg';
+  function mk(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+  function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+
+  /* Tema */
+  var root=document.documentElement, btn=$('theme-btn'), mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function eff(){return root.getAttribute('data-theme')||(mq.matches?'dark':'light')}
+  function lab(){btn.textContent=eff()==='dark'?'Tema claro':'Tema oscuro'}
+  try{var st=localStorage.getItem('cd-theme'); if(st==='dark'||st==='light')root.setAttribute('data-theme',st)}catch(e){}
+  btn.addEventListener('click',function(){
+    var n=eff()==='dark'?'light':'dark'; root.setAttribute('data-theme',n);
+    try{localStorage.setItem('cd-theme',n)}catch(e){} lab();
+  });
+  lab();
+
+  /* Pestaña activa */
+  var links=[].slice.call(document.querySelectorAll('.tabs a'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if(en.isIntersecting){links.forEach(function(a){a.removeAttribute('aria-current')});
+          var a=document.querySelector('.tabs a[href="#'+en.target.id+'"]'); if(a)a.setAttribute('aria-current','true')}
+      });
+    },{rootMargin:'-25% 0px -60% 0px'});
+    [].slice.call(document.querySelectorAll('section.page')).forEach(function(s){io.observe(s)});
+  }
+
+  /* Esfera con luz ajustable */
+  var az=$('az'), el=$('el');
+  function sphere(){
+    var a=+az.value*Math.PI/180, e=+el.value*Math.PI/180, hx=Math.sin(a), hy=Math.sin(e);
+    var g=$('sph-g');
+    g.setAttribute('fx',(0.5+0.3*hx).toFixed(3)); g.setAttribute('fy',(0.5-0.3*hy).toFixed(3));
+    g.setAttribute('cx',(0.5+0.07*hx).toFixed(3)); g.setAttribute('cy',(0.5-0.07*hy).toFixed(3));
+    var len=Math.min(150,70/Math.tan(e)), sx=260-hx*len*0.9;
+    var sh=$('sph-sh'); sh.setAttribute('cx',sx.toFixed(1)); sh.setAttribute('rx',(52+len*0.42).toFixed(1));
+    sh.setAttribute('opacity',(0.35+0.3*hy).toFixed(2));
+    var s=hx>=0?1:-1, t=$('sph-lbls').children;
+    t[0].setAttribute('text-anchor','middle'); t[0].setAttribute('x',clamp(260+s*135,50,470)); t[0].setAttribute('y',(128-hy*70).toFixed(0));
+    t[1].setAttribute('text-anchor','middle'); t[1].setAttribute('x',clamp(260-s*140,60,460)); t[1].setAttribute('y',150);
+    t[2].setAttribute('text-anchor','middle'); t[2].setAttribute('x',clamp(sx,80,440)); t[2].setAttribute('y',232);
+    $('az-o').textContent=az.value; $('el-o').textContent=el.value;
+  }
+  az.addEventListener('input',sphere); el.addEventListener('input',sphere); sphere();
+
+  /* Técnicas de sombreado */
+  var techs={
+    hatch:{n:'Rayado',t:'Líneas paralelas. Cuanto más juntas, más oscuro. Mantén siempre el mismo ángulo y la misma presión para que se vea limpio, y trázalas con el brazo, no con la muñeca.'},
+    cross:{n:'Rayado cruzado',t:'Capas de líneas en direcciones distintas. En lugar de apretar más, añade una capa nueva cruzando la anterior. Da texturas ricas y es muy controlable.'},
+    stipple:{n:'Punteado',t:'Sólo puntos. La densidad decide el valor. Es lento pero no mancha ni se corre, y funciona muy bien para piel, piedra o arena.'},
+    blend:{n:'Difuminado',t:'Sombrea suave con la punta de lado y mezcla con el difumino o un dedo limpio. Ideal para cielos, piel y metal. Alterna con la goma para recuperar luces.'}
+  };
+  function rng(seed){var s=seed;return function(){s=(s*16807)%2147483647;return s/2147483647}}
+  function ramp(key){
+    var svg=$('ramp'); svg.innerHTML='';
+    var defs=mk('defs',{},svg), W=108, H=100, y0=10;
+    for(var i=0;i<5;i++){
+      var x0=10+i*118;
+      var cp=mk('clipPath',{id:'rc'+i},defs); mk('rect',{x:x0,y:y0,width:W,height:H},cp);
+      var g=mk('g',{'clip-path':'url(#rc'+i+')',filter:'url(#rough)'},svg);
+      var ln={stroke:'currentColor','stroke-width':1.3,'stroke-linecap':'round'};
+      if(key==='hatch'){
+        var sp=[26,17,11,7,4.5][i];
+        for(var k=-H;k<W;k+=sp)mk('line',Object.assign({x1:x0+k,y1:y0+H,x2:x0+k+H,y2:y0},ln),g);
+      }else if(key==='cross'){
+        var s1=[30,24,18,13,9][i], s2=[0,30,22,15,10][i];
+        for(var k1=-H;k1<W;k1+=s1)mk('line',Object.assign({x1:x0+k1,y1:y0+H,x2:x0+k1+H,y2:y0},ln),g);
+        if(s2)for(var k2=0;k2<W+H;k2+=s2)mk('line',Object.assign({x1:x0+k2,y1:y0+H,x2:x0+k2-H,y2:y0},ln),g);
+      }else if(key==='stipple'){
+        var r=rng(11+i*7), n=[16,45,100,190,330][i];
+        for(var d=0;d<n;d++)mk('circle',{cx:(x0+2+r()*(W-4)).toFixed(1),cy:(y0+2+r()*(H-4)).toFixed(1),r:1.25,fill:'currentColor'},g);
+      }else{
+        mk('rect',{x:x0,y:y0,width:W,height:H,fill:'currentColor',opacity:[.1,.26,.44,.64,.86][i]},g);
+      }
+      mk('rect',{x:x0,y:y0,width:W,height:H,fill:'none',stroke:'var(--line)','stroke-width':1.5},svg);
+      var tx=mk('text',{x:x0+W/2,y:134,'text-anchor':'middle',class:'lbl'},svg);
+      tx.textContent=['1 luz','2','3','4','5 sombra'][i];
+    }
+    $('tech-name').textContent=techs[key].n+' · valores 1 (luz) a 5 (sombra)';
+    $('tech-out').textContent=techs[key].t;
+  }
+  [].slice.call(document.querySelectorAll('[data-tech]')).forEach(function(b){
+    b.addEventListener('click',function(){
+      [].slice.call(document.querySelectorAll('[data-tech]')).forEach(function(o){o.setAttribute('aria-pressed',o===b?'true':'false')});
+      ramp(b.getAttribute('data-tech'));
+    });
+  });
+  ramp('hatch');
+
+  /* Perspectiva de un punto de fuga */
+  var VW=600, VH=340, vsvg=$('vp-svg'), sc=$('vp-scene');
+  var hS=$('vp-h'), xS=$('vp-x'), gS=$('vp-guides');
+  var boxes=[{x:40,y:200,w:120,h:90,t:.38},{x:230,y:172,w:62,h:56,t:.3},{x:420,y:214,w:110,h:84,t:.4}];
+  function vp(){
+    var hy=+hS.value, vx=+xS.value; sc.innerHTML='';
+    mk('rect',{x:0,y:hy,width:VW,height:VH-hy,class:'f2',opacity:.3},sc);
+    mk('line',{x1:0,y1:hy,x2:VW,y2:hy,class:'s-thin'},sc);
+    var gg=mk('g',{},sc), bg=mk('g',{filter:'url(#rough)'},sc);
+    boxes.forEach(function(b){
+      var l=b.x, r=b.x+b.w, t=b.y, bt=b.y+b.h, k=1-b.t;
+      function B(px,py){return [vx+(px-vx)*k, hy+(py-hy)*k]}
+      var F={tl:[l,t],tr:[r,t],bl:[l,bt],br:[r,bt]}, K={tl:B(l,t),tr:B(r,t),bl:B(l,bt),br:B(r,bt)};
+      if(gS.checked)['tl','tr','bl','br'].forEach(function(c){mk('line',{x1:F[c][0],y1:F[c][1],x2:vx,y2:hy,class:'guide'},gg)});
+      function poly(a,cls){mk('polygon',{points:a.map(function(p){return p[0].toFixed(1)+','+p[1].toFixed(1)}).join(' '),class:'s '+cls},bg)}
+      if(hy<t)poly([F.tl,K.tl,K.tr,F.tr],'f1');
+      if(hy>bt)poly([F.bl,K.bl,K.br,F.br],'f3');
+      if(vx>r)poly([F.tr,K.tr,K.br,F.br],'f4');
+      if(vx<l)poly([F.tl,K.tl,K.bl,F.bl],'f3');
+      mk('rect',{x:l,y:t,width:b.w,height:b.h,class:'s f2'},bg);
+    });
+    var t1=mk('text',{x:clamp(vx,50,550),y:hy-16,class:'lbl','text-anchor':'middle'},sc); t1.textContent='punto de fuga';
+    var t2=mk('text',{x:592,y:hy+20,class:'lbl-m','text-anchor':'end'},sc); t2.textContent='horizonte = altura de tus ojos';
+    mk('circle',{cx:vx,cy:hy,r:9,class:'vp-handle'},sc);
+    $('vp-h-o').textContent=hS.value; $('vp-x-o').textContent=xS.value;
+  }
+  [hS,xS,gS].forEach(function(c){c.addEventListener('input',vp)});
+  var dragging=false;
+  function toVB(e){var r=vsvg.getBoundingClientRect();return [(e.clientX-r.left)/r.width*VW,(e.clientY-r.top)/r.height*VH]}
+  vsvg.addEventListener('pointerdown',function(e){
+    var p=toVB(e), dx=p[0]-(+xS.value), dy=p[1]-(+hS.value);
+    if(Math.sqrt(dx*dx+dy*dy)<34){dragging=true; vsvg.classList.add('drag'); try{vsvg.setPointerCapture(e.pointerId)}catch(x){} e.preventDefault()}
+  });
+  vsvg.addEventListener('pointermove',function(e){
+    if(!dragging)return; var p=toVB(e);
+    xS.value=clamp(Math.round(p[0]),60,540); hS.value=clamp(Math.round(p[1]),50,300); vp();
+  });
+  function end(){dragging=false; vsvg.classList.remove('drag')}
+  vsvg.addEventListener('pointerup',end); vsvg.addEventListener('pointercancel',end);
+  vp();
+
+  /* Tercios */
+  $('thirds').addEventListener('change',function(){$('thirds-grid').hidden=!this.checked});
+
+  /* Plan de práctica */
+  var items=[].slice.call(document.querySelectorAll('.week input')), saved={};
+  try{saved=JSON.parse(localStorage.getItem('cd-prog')||'{}')||{}}catch(e){saved={}}
+  items.forEach(function(i){i.checked=!!saved[i.id]});
+  function prog(save){
+    var n=items.filter(function(i){return i.checked}).length;
+    $('prog-fill').style.width=(n/items.length*100)+'%';
+    $('prog-bar').setAttribute('aria-valuenow',n);
+    $('prog-txt').textContent=n+' de '+items.length+' ejercicios';
+    if(save){var o={};items.forEach(function(i){o[i.id]=i.checked});try{localStorage.setItem('cd-prog',JSON.stringify(o))}catch(e){}}
+  }
+  items.forEach(function(i){i.addEventListener('change',function(){prog(true)})});
+  $('prog-reset').addEventListener('click',function(){items.forEach(function(i){i.checked=false});prog(true)});
+  prog(false);
+})();
+</script>
+
+</body></html>
